@@ -1,0 +1,6 @@
+#   For learning python http
+#       Run web server
+uwsgi --http-socket 127.0.0.1:5683 --mount /=server:app
+
+#   Run client side
+SECRET_URL="http://127.0.0.1:5683" python client.py
