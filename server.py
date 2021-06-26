@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
+
 from flask import Flask
 
-SECRET_MESSAGE = "fluffy tail"
-app = Flask(__name__)
+SECRET_MESSAGE = "I am the bone of my sword"
+app = Flask( __name__ )
 
 @app.route("/")
 def get_secret_message():
