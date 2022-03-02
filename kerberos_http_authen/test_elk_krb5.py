@@ -16,4 +16,6 @@ headers = {"Authorization": "Negotiate " + negotiateDetail}
 response = requests.get( 'https://test.alhambra.local:9200/', verify=False, headers=headers )
 # response = requests.get( 'https://test.alhambra.local:9200/', verify=False )
 print( response )
+print( response.headers )
+print( response.content )
 
