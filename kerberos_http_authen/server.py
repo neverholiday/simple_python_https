@@ -33,14 +33,14 @@ def main():
 @app.route( '/auth' )
 def authen():
 	print( '========================================================' )
-	print( request.headers )
-	header = request.headers.get( "Authorization" )
+	header = request.headers.get( "Authorization" ) or request.headers.get( 'WWW-Authenticate' )
 	print( f'header = {header}' )
 	print( '========================================================' )
 	if not header:
 		return _unauthorize()
 	else:
 		token = ''.join(header.split()[1:])
+		print( 'token = {}'.format( token ) )
 		rc, state = kerberos.authGSSServerInit(ServiceName)
 		rc = kerberos.authGSSServerStep(state, token)
 
@@ -50,38 +50,9 @@ def authen():
 		if state:
 			kerberos.authGSSServerClean(state)
 		
-		header_ret = { 'WWW-Authenticate' : 'negotiate {}'.format( kerberosToken ),
-						'x-proxy-user' : 'admin',
-						'x-proxy-roles' : 'admin' }
+		header_ret = { 'WWW-Authenticate' : 'negotiate {}'.format( kerberosToken ) }
 
 		return Response( user, 200,  header_ret )
-
-
-@app.route( '/auth_opensearch' )
-def authen_opensearch():
-	print( '========================================================' )
-	print( request.headers )
-	print( '========================================================' )
-
-	header = request.headers.get( "Authorization" )
-	if not header:
-		return _unauthorize()
-	else:
-		token = ''.join(header.split()[1:])
-		rc, state = kerberos.authGSSServerInit(ServiceName)
-		rc = kerberos.authGSSServerStep(state, token)
-
-		kerberosToken = kerberos.authGSSServerResponse(state)
-		user = kerberos.authGSSServerUserName(state)
-
-		if state:
-			kerberos.authGSSServerClean(state)
-		
-		header_ret = { 'WWW-Authenticate' : 'negotiate {}'.format( kerberosToken ),
-						'x-proxy-user' : 'admin',
-						'x-proxy-roles' : 'admin' }
-
-		return Response( user, 200, header_ret )
 
 @app.route( '/test' )
 def test():
@@ -89,7 +60,6 @@ def test():
 	print( request.headers )
 	print( request.url )
 	print( '========================================================' )
-
 
 	return Response( 'Test route', 200 )
 

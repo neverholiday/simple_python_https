@@ -42,3 +42,5 @@ if state:
 	kerberos.authGSSServerClean(state)
 
 print( 'User request: {}'.format( user ) )
+print( negotiateDetail )
+print( kerberosToken )
